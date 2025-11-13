@@ -95,8 +95,8 @@ def login_html(driver):
         password_field.send_keys(config.SENHA_TSPLUS)
         print("Credenciais HTML inseridas.")
 
-        login_button.click()
-        print("Botão de login HTML clicado.")
+        driver.execute_script("arguments[0].click();", login_button)
+        print("Botão de login HTML clicado via JavaScript.")
 
         # Após o login, a aplicação pode carregar dentro de um <iframe>
         # É necessário mudar o foco do Selenium para dentro do iframe
