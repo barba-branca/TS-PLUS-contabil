@@ -98,15 +98,29 @@ def login_html(driver):
         login_button.click()
         print("Botão de login HTML clicado.")
 
+        # Após o login, a aplicação pode carregar dentro de um <iframe>
+        # É necessário mudar o foco do Selenium para dentro do iframe
+        try:
+            print("Verificando a presença de um iframe...")
+            iframe_wait = WebDriverWait(driver, config.WAIT_TIME_MEDIUM)
+            iframe = iframe_wait.until(EC.presence_of_element_located((By.TAG_NAME, "iframe")))
+
+            print("Iframe encontrado. Mudando o foco do driver...")
+            driver.switch_to.frame(iframe)
+            print("Foco alterado para o iframe.")
+        except Exception:
+            # Se não houver iframe, continua na página principal
+            print("Nenhum iframe encontrado. Continuando na página principal.")
+
         # Aguarda o canvas aparecer após o login
         print(f"Aguardando o canvas carregar por {config.WAIT_FOR_CANVAS} segundos...")
-        wait = WebDriverWait(driver, config.WAIT_FOR_CANVAS)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, "canvas")))
+        canvas_wait = WebDriverWait(driver, config.WAIT_FOR_CANVAS)
+        canvas_wait.until(EC.presence_of_element_located((By.TAG_NAME, "canvas")))
         print("Canvas carregado com sucesso.")
 
     except Exception as e:
         print(f"Erro durante o login HTML: {e}")
-        driver.quit()
+        raise
 
 def login_windows(driver):
     """
